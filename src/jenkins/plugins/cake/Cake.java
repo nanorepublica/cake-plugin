@@ -16,7 +16,7 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 
 /**
- * Sample {@link Builder}.
+ * Coffeescript Cake Plugin (based o.
  *
  * <p>
  * When the user configures the project and enables this builder,
@@ -30,35 +30,47 @@ import java.io.IOException;
  * When a build is performed, the {@link #perform(AbstractBuild, Launcher, BuildListener)}
  * method will be invoked. 
  *
- * @author Kohsuke Kawaguchi
+ * @author Andrew Miller
  */
-public class HelloWorldBuilder extends Builder {
+public class Cake extends Builder {
 
-    private final String name;
+    private final String cakeFile;
+    private final String tasks;
+    private final String cakeWorkingDir;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
-    public HelloWorldBuilder(String name) {
-        this.name = name;
+    public Cake(String cakeFile, String tasks, String cakeWorkingDir) {
+        this.cakeFile = cakeFile;
+        this.tasks = tasks;
+        this.cakeWorkingDir = cakeWorkingDir;
     }
 
     /**
      * We'll use this from the <tt>config.jelly</tt>.
      */
-    public String getName() {
-        return name;
+    public String getCakeFile() {
+        return cakeFile;
     }
 
+    public String getCakeWorkingDir() {
+        return cakeWorkingDir;
+    }
+    
+    public String getTasks() {
+        return tasks;
+    }
+    
     @Override
-    public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
+    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) {
         // This is where you 'build' the project.
         // Since this is a dummy, we just say 'hello world' and call that a build.
 
         // This also shows how you can consult the global configuration of the builder
         if (getDescriptor().getUseFrench())
-            listener.getLogger().println("Bonjour, "+name+"!");
+            listener.getLogger().println("Bonjour, "+tasks+"!");
         else
-            listener.getLogger().println("Hello, "+name+"!");
+            listener.getLogger().println("Hello, "+tasks+"!");
         return true;
     }
 
@@ -66,8 +78,8 @@ public class HelloWorldBuilder extends Builder {
     // If your plugin doesn't really define any property on Descriptor,
     // you don't have to do this.
     @Override
-    public DescriptorImpl getDescriptor() {
-        return (DescriptorImpl)super.getDescriptor();
+    public CakeDescriptor getDescriptor() {
+        return (CakeDescriptor)super.getDescriptor();
     }
 
     /**
@@ -79,7 +91,7 @@ public class HelloWorldBuilder extends Builder {
      * for the actual HTML fragment for the configuration screen.
      */
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
-    public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
+    public static final class CakeDescriptor extends BuildStepDescriptor<Builder> {
         /**
          * To persist global configuration information,
          * simply store it in a field and call save().
@@ -115,7 +127,7 @@ public class HelloWorldBuilder extends Builder {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Say hello world";
+            return "Invoke Cake";
         }
 
         @Override

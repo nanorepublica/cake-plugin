@@ -1,0 +1,32 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <!--
+    This jelly script is used for per-project configuration.
+
+    See global.jelly for a general discussion about jelly script.
+  -->
+
+  <!--
+    Creates a text field that shows the value of the "name" property.
+    When submitted, it will be passed to the corresponding constructor parameter.
+  -->
+        <f:entry title="Cake Version">
+        <select class="setting-input" name="cake.rakeInstallation">
+          <option>(Default)</option>
+          <j:forEach var="inst" items="${descriptor.installations}">
+            <f:option selected="${inst.name == instance.cakeInstallation}">${inst.name}</f:option>
+          </j:forEach>
+        </select>
+  </f:entry>
+            
+    <f:entry title="Tasks" description=" Specify Cake task(s) to run.">
+        <f:expandableTextbox name="cake.tasks" value="${instance.tasks}" />
+    </f:entry>
+    <f:advanced>
+        <f:entry title="Cake file" description="Specify the cake file path, by default it's './Cakefile'">
+          <f:textbox name="cake.cakeFile" value="${instance.cakeFile}"/>
+        </f:entry>
+        <f:entry title="Cake working directory" description="Specify the cake working directory, by default it's '.'">
+            <f:textbox name="cake.cakeWorkingDir" value="${instance.cakeWorkingDir}"/>
+        </f:entry>
+    </f:advanced>
+</j:jelly>
